@@ -14,6 +14,16 @@ const sidebarConfig = [
         icon: getIcon('eva:people-fill')
     },
     {
+        title: 'SERVICES',
+        path: '/services',
+        icon: getIcon('eva:people-fill')
+    },
+    {
+        title: 'ROUTES',
+        path: '/routes',
+        icon: getIcon('eva:people-fill')
+    },
+    {
         title: 'Not found',
         path: '/404',
         icon: getIcon('eva:alert-triangle-fill')

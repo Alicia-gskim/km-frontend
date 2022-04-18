@@ -1,29 +1,35 @@
-import { Card, Container, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Card, Container, Stack, Table, TableBody, TableContainer, Typography } from "@mui/material";
 import Page from "../components/Page";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import TableList from "../components/TableList";
+import AxiosModule from "../components/AxiosModule";
+
+// const GW_URL = 'http://192.168.1.102:8001';
 
 export default function Info() {
-    const [items, setItems] = useState('');
+    const [infoList, setInfoList] = useState('');
     useEffect( () => {
-        axios.get('http://192.168.1.102:8001')
-            .then(res => {
-                setItems(res.data);
+        // axios.get(GW_URL)
+        //     .then(res => {
+        //         setItems(res.data);
+        //     })
 
-                // Object.keys(res.data).filter( (key) => {
-                //     console.log('object key : ', key,', type of : ', typeof res.data[key]);
-                //     setDataKey(key);
-                // });
-             })
+        // CommonAxios.getDef().then(res =>  {
+        //     setItems(res.data);}
+        // )
+
+        AxiosModule.get('/', {})
+            .then(res => {
+                setInfoList(res.data);
+            });
     }, []);
 
     return (
         <Page title="INFO | Cravis-KongManager">
-            <Container>
+            <Container maxWidth="xl">
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        INFO
+                        Node Info
                     </Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
                         Generic details about the node
@@ -34,7 +40,7 @@ export default function Info() {
                     <TableContainer sx={{ minWidth: 800 }}>
                         <Table>
                             <TableBody>
-                                <TableList lists={Object.entries(items)} />
+                                <TableList lists={Object.entries(infoList)} />
                             </TableBody>
                         </Table>
                     </TableContainer>

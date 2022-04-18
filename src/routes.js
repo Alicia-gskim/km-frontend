@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Navigate, useRoutes } from "react-router-dom";
-import Hello from "./api/hello";
 import DashboardLayout from './components/layouts/dashboard';
 import DashboardApp from "./pages/DashboardApp";
-import LogoOnlyLayout from './components/layouts/LogoOnlyLayout';
 import Info from "./pages/Info";
 import NotFound from './pages/Page404';
+import Routes from "./pages/Routes";
+import Services from "./pages/Services";
+import ServicesBak from "./pages/Services_bak";
 
 // const routerList = 
 
@@ -33,6 +34,9 @@ export default function Router() {
             children: [
                 { path: '/', element: <Navigate to="/dashboard/app" /> },
                 { path: 'info', element: <Info /> },
+                { path: 'services', element: <Services /> },
+                // { path: 'services_bak', element: <ServicesBak /> },
+                { path: 'routes', element: <Routes /> },
                 { path: '404', element: <NotFound /> },
                 { path: '*', element: <Navigate to="/404" /> }
             ]

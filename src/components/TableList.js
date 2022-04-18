@@ -34,7 +34,7 @@ const DrawRow = ({ items }) => {
                 if( typeof item === 'object' ) {
                     return <CreateTable key={uid} id={uid} item={Object.entries(item)} />
                 } else {
-                    return <DrawCell key={uid} id={uid} item={item} />
+                    return <DrawCell key={uid} id={uid} item={item.toString() === '' ? '(Empty String)' : item.toString()} />
                 }
             })}
         </TableRow>
