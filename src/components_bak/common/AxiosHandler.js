@@ -1,6 +1,6 @@
 /**
  * axios - request method
- * GET : axios.get*url[, config]
+ * GET : axios.get(url[, config])
  * POST : axios.post(url, data[, config])
  * PUT : axios.put(url, data[, config])
  * DELETE : axios.delete(url[, config])
@@ -17,9 +17,13 @@ export function Get(url, params) {
         url,
         {params}
     )
-    .then(function(res) {
-        // success case
-        return res.json();
+    // .then(function(res) {
+    //     // success case
+    //     return res.json();
+    // })
+    .then( (Response) => {
+        console.log("axios.GET : ", Response.data);
+        return Response.data;
     })
     .catch(function(e) {
         return e;

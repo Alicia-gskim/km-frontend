@@ -1,10 +1,12 @@
 import { Box, Button, Card, Container, Stack, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Toolbar, Typography } from "@mui/material";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Page from "../components/Page";
 import CustomSelect from "./CustomSelect";
 import AxiosModule from "../components/AxiosModule";
 import Board from "../components/layouts/services/Board";
+import BasicModal from "../components/layouts/popups/BasicModal";
+import InitialData, { GlobalData } from "../globalDataInfo";
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
     height: 96,
@@ -25,11 +27,13 @@ const headList = [
 ]
 
 export default function Routes() {
+
     const [routeList, setRouteList] = useState([]);
     useEffect( () => {
-        AxiosModule.get('/routes')
+        AxiosModule.get('/routes', {})
         .then(res => {
             setRouteList(res.data.data);
+            setCurrentPage(1);
         });
     }, []);
     const [value, setValue] = useState(5);
@@ -46,8 +50,13 @@ export default function Routes() {
     function currentRouteList(tmp) {
         let currentSvcLists = 0;
         currentSvcLists = tmp.slice(indexOfFirst, indexOfLast);
-        console.log("routes --- ", currentPage);
+        // console.log("routes --- ", currentPage);
         return currentSvcLists;
+    }
+
+    const [open, setOpen] = useState(false);
+    const handleModal = () => () => {
+        setOpen(!open);
     }
 
     return (
@@ -64,9 +73,16 @@ export default function Routes() {
 
                 <Card>
                     <RootStyle>
+                        <Box>
+                            <Button onClick={handleModal(true)}>
+                                YOU CAN ONLY CREATE ROUTES FROM A SERVICE PLACE
+                            </Button>
+                            <BasicModal isYn={open} changeOpen={handleModal(true)} />
+                        </Box>
+                        {/* <BasicModal btnName={"YOU CAN ONLY CREATE ROUTES FROM A SERVICE PLACE"} />
                         <Button>
                             YOU CAN ONLY CREATE ROUTES FROM A SERVICE PLACE
-                        </Button>
+                        </Button> */}
                         <Box display={"inline-flex"}>
                             <SearchOutlinedIcon fontSize='large' sx={{ color: 'action.active', mr: 1, marginTop: 2 }} />
                             <TextField id="standard-basic" label="search..." variant="standard" />
@@ -77,19 +93,6 @@ export default function Routes() {
                     <TableContainer sx={{ minWidth: 800 }}>
                         <Table aria-label="routes list table">
                             <TableHead>
-                                {/* <TableRow>
-                                    <TableCell>STRIP PATH</TableCell>
-                                    <TableCell>PRESERVE HOST</TableCell>
-                                    <TableCell>RAWS VIEW</TableCell>
-                                    <TableCell>NAME / ID</TableCell>
-                                    <TableCell>TAGS</TableCell>
-                                    <TableCell>HOSTS</TableCell>
-                                    <TableCell>SERVICE</TableCell>
-                                    <TableCell>PATHS</TableCell>
-                                    <TableCell>CREATED</TableCell>
-                                    <TableCell>EDIT</TableCell>
-                                    <TableCell>DELETE</TableCell>
-                                </TableRow> */}
                                 <Board gubun={"head"} lists={headList} />
                             </TableHead>
 

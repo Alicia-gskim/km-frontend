@@ -9,6 +9,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import CustomSelect from './CustomSelect';
 import CustomPagination from '../components/CustomPagination';
+import BasicModal from '../components/layouts/popups/BasicModal';
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
     height: 96,
@@ -27,16 +28,7 @@ const headList = [
 ]
 
 export default function Services() {
-    const [svcList, setSvcList] = useState([]);
-    
-    // const [pages, setPages] = useState(1);
-    // const handleChange = (e, v) => {
-    //     console.log('value : ', v);
-    //     setPages(v);
-    // }
-    // const getSvcList = (svcList) => {
-    //     setSvcList(svcList);
-    // }
+    const [svcList, setSvcList] = useState([{}]);
 
     useEffect( () => {
         AxiosModule.get('/services', {})
@@ -44,6 +36,7 @@ export default function Services() {
             setSvcList(res.data.data);
             console.log('get services list data : ', svcList);
             console.log('length : ', svcList.length);
+            setCurrentPage(1);
         });
     }, []);
 
@@ -83,6 +76,14 @@ export default function Services() {
         setCurrentPage(1);
     }
 
+    const [open, setOpen] = useState(false);
+    const handleModalOpen = () => {
+        setOpen(true);
+    }
+    const handleModalClose = () => {
+        setOpen(false);
+    }
+
     return (
         <Page title="SERVICES | Cravis-KongManager">
             <Container maxWidth="xl">
@@ -97,9 +98,12 @@ export default function Services() {
 
                 <Card>
                     <RootStyle>
-                        <Button>
-                            <AddIcon />add new service
-                        </Button>
+                        <Box>
+                            <Button onClick={handleModalOpen}>
+                                <AddIcon />Add New Service
+                            </Button>
+                            <BasicModal open={open} onClose={handleModalClose} />
+                        </Box>
                         <Box display={"inline-flex"}>
                             <SearchOutlinedIcon fontSize='large' sx={{ color: 'action.active', mr: 1, marginTop: 2 }} />
                             <TextField id="standard-basic" label="search..." variant="standard" />

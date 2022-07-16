@@ -4,7 +4,8 @@ import ScrollToTop from './components_bak/ScrollToTop';
 import ThemeConfig from './theme';
 import GlobalStyles from './theme/globalStyles';
 
-export default function App() {
+function App() {
+    
     return (
         <ThemeConfig>
             <ScrollToTop />
@@ -13,3 +14,5 @@ export default function App() {
         </ThemeConfig>
     );
 };
+
+export default App;

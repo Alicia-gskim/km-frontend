@@ -19,6 +19,11 @@ const sidebarConfig = [
         icon: getIcon('eva:people-fill')
     },
     {
+        title: 'SERVICES_BAK',
+        path: '/services_bak',
+        icon: getIcon('eva:people-fill')
+    },
+    {
         title: 'ROUTES',
         path: '/routes',
         icon: getIcon('eva:people-fill')

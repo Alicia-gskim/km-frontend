@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Navigate, useRoutes } from "react-router-dom";
 import DashboardLayout from './components/layouts/dashboard';
+import { GlobalData } from "./globalDataInfo";
 import DashboardApp from "./pages/DashboardApp";
 import Info from "./pages/Info";
 import NotFound from './pages/Page404';
@@ -8,18 +9,7 @@ import Routes from "./pages/Routes";
 import Services from "./pages/Services";
 import ServicesBak from "./pages/Services_bak";
 
-// const routerList = 
-
 export default function Router() {
-    // const [routerList, setRouterList] = useRoutes([]);
-    // const fetchRouter = async () => {
-    //     const response = await axios.get('/common/navidt');
-    //     setRouterList(response.data);
-    // }
-
-    // console.log(routerList);
-
-
     return useRoutes([
         {
             path: '/dashboard',
@@ -34,8 +24,8 @@ export default function Router() {
             children: [
                 { path: '/', element: <Navigate to="/dashboard/app" /> },
                 { path: 'info', element: <Info /> },
-                { path: 'services', element: <Services /> },
-                // { path: 'services_bak', element: <ServicesBak /> },
+                // { path: 'services', element: <Services /> },
+                { path: 'services_bak', element: <ServicesBak /> },
                 { path: 'routes', element: <Routes /> },
                 { path: '404', element: <NotFound /> },
                 { path: '*', element: <Navigate to="/404" /> }

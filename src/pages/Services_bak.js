@@ -1,15 +1,14 @@
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import { Box, Button, Card, Container, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Toolbar, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { Box, Button, Card, Container, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import Page from "../components/Page";
 import AxiosModule from "../components/AxiosModule";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AddIcon from '@mui/icons-material/Add';
-// import CustomSelect from './CustomSelect';
-import { cloneDeep, throttle } from 'lodash';
-import Pagination from "rc-pagination";
-
+import MaterialReactTable from 'material-react-table';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { DataGrid } from '@mui/x-data-grid';
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
     height: 96,
@@ -18,80 +17,69 @@ const RootStyle = styled(Toolbar)(({ theme }) => ({
     padding: theme.spacing(0, 1, 0, 3)
 }));
 
-const tableHead = {
-    rawview: "",
-    name: "NAME",
-    host: "HOST",
-    tags: "TAGS",
-    created_at: "CREATED",
-    delete: ""
-}
-export default function ServicesBak() {
+const headList = [
+    {id: ["raw-view"], name: ""},
+    {id: "name", name: "NAME"},
+    {id: "host", name: "HOST"},
+    {id: "tags", name: "TAGS"},
+    {id: "created_at", name: "CREATED"},
+    {id: ["delete"], name: ""}
+]
+
+const ServicesBak = () => {
     const [svcList, setSvcList] = useState([]);
     useEffect( () => {
-        AxiosModule.get('/services', {})
+        const fetchData = async () => {
+            AxiosModule.get('/services', {})
             .then(res => {
-                setSvcList(res.data.data);
+                const resData = res.data.data;
+                console.log('length : ', resData.length);
+                let tmpDataList = [];
+                if( res.data.data.length > 0 ) {
+                    // setSvcList(res.data.data);
+                    resData.map((items, idx) => {
+                        console.log("id: ", idx, ", items:", items);
+                        return tmpDataList.push(items);
+                    })
+                    console.log(tmpDataList);
+                    setSvcList(tmpDataList);
+                } else {
+                    setSvcList([]);
+                }
                 console.log('get services list data : ', svcList);
-                console.log('length : ', svcList.length);
-        });
+            });
+        };
+        fetchData();
     }, []);
 
-    const countPerPage = 10;
-    const [value, setValue] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [collection, setCollection] = useState(
-        cloneDeep(svcList.slice(0, countPerPage))
-    );
-    const searchData = useRef(
-        throttle(val => {
-            setCurrentPage(1);
-            const data = cloneDeep(
-                svcList.slice(0, countPerPage)
-            );
-            console.log("=---- ",data);
-            setCollection(data);
-        }, 400)
-    );
-
-    useEffect( () => {
-        console.log("useEffect : ", value);
-        if( !value ) {
-            updatePage(1);
-        } else {
-            searchData.current(value);
-        }
-    }, [value]);
-
-    const updatePage = p => {
-        setCurrentPage(p);
-        const to = currentPage * p;
-        const from = to - currentPage;
-        setCollection(cloneDeep(svcList.slice(from, to)));
-    }
-
-    const tableRows = rowData => {
-        const {key, index} = rowData;
-        const tableCell = Object.keys(tableHead);
-        const columnData = tableCell.map((keyD, i) => {
-            return <TableCell key={i}>{key[keyD]}</TableCell>
-        })
-
-        return <TableRow key={index}>{columnData}</TableRow>;
-    }
-
-    const tableData = () => {
-        return collection.map((key, index) => tableRows({key, index}));
-    }
-
-    const headRows = () => {
-        return Object.values(tableHead).map((title, index) => (
-            <TableCell key={index}>{title}</TableCell>
-        ))
-    }
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'raw-view'
+            },
+            {
+                accessorKey: 'name',
+                header: 'NAME'
+            },
+            {
+                accessorKey: 'host',
+                header: 'HOST'
+            },
+            {
+                accessorKey: 'tags',
+                header: 'TAGS'
+            },
+            {
+                accessorKey: 'created_at',
+                header: 'CREATED'
+            },
+            {
+                accessorKey: 'delete'
+            }
+        ], []
+    )
 
     return (
-        <>
         <Page title="SERVICES | Cravis-KongManager">
             <Container maxWidth="xl">
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -111,45 +99,52 @@ export default function ServicesBak() {
                         <Box display={"inline-flex"}>
                             <SearchOutlinedIcon fontSize='large' sx={{ color: 'action.active', mr: 1, marginTop: 2 }} />
                             <TextField id="standard-basic" label="search..." variant="standard" />
-                            {/* <CustomSelect value={value} getSelectValue={getSelectValue} /> */}
                         </Box>
                     </RootStyle>
 
                     <TableContainer sx={{ minWidth: 800 }}>
-                        <Table aria-label="services list table">
+                        {/* <MaterialReactTable
+                            columns={columns}
+                            data={svcList}
+                        /> */}
+                        <Table>
                             <TableHead>
-                                <TableRow>
-                                    {/* {headRows()} */}
+                                <TableRow key={'header'}>
+                                    {
+                                        columns.map((column) => {
+                                            return (
+                                                <TableCell key={column.accessorKey}>
+                                                    {column.header}
+                                                </TableCell>
+                                            )
+                                        })
+                                    }
                                 </TableRow>
                             </TableHead>
-
                             <TableBody>
-                                {/* <Board lists={Object.entries(svcList)} pageSize={value} /> */}
-                                {/* {tableData()} */}
+                                {svcList.map((row) => {
+                                    return (
+                                        <TableRow key={row.id}>
+                                            {
+                                                columns.map((column) => {
+                                                    const value = row[column.accessorKey];
+                                                    return (
+                                                        <TableCell key={column.accessorKey}>
+                                                            {value}
+                                                        </TableCell>
+                                                    )
+                                                })
+                                            }
+                                        </TableRow>
+                                    )
+                                })}
                             </TableBody>
                         </Table>
-                        {/* <Pagination
-                            pageSize={countPerPage}
-                            onCHange={updatePage}
-                            current={currentPage}
-                            total={svcList.length}
-                        /> */}
                     </TableContainer>
                 </Card>
-                <Table>
-                    <TableHead>
-                        <TableRow>{headRows()}</TableRow>
-                    </TableHead>
-                    <TableBody className='trhover'>{tableData()}</TableBody>
-                </Table>
-                <Pagination
-                    pageSize={countPerPage}
-                    onChange={updatePage}
-                    current={currentPage}
-                    total={svcList.length}
-                />
             </Container>
         </Page>
-        </>
     );
 };
+
+export default ServicesBak;

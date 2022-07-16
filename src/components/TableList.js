@@ -32,7 +32,11 @@ const DrawRow = ({ items }) => {
                 // console.log('type : ', typeof item, ', root depth : ', item);
 
                 if( typeof item === 'object' ) {
-                    return <CreateTable key={uid} id={uid} item={Object.entries(item)} />
+                    if( item !== null ) {
+                        return <CreateTable key={uid} id={uid} item={Object.entries(item)} />
+                    } else {
+                        return <DrawCell key={uid} id={uid} item={""} />
+                    }
                 } else {
                     return <DrawCell key={uid} id={uid} item={item.toString() === '' ? '(Empty String)' : item.toString()} />
                 }
@@ -49,7 +53,7 @@ const DrawCell = ({ id, item }) => {
 
 function TableList( {lists} ) {
     return lists.map( (items, idx) => {
-
+        console.log("#### TableList Type --- ", typeof items, ", ### ITEM : ", items);
         return <DrawRow key={idx} items={items} />
     })
 };

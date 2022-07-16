@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardHeader, Container, Grid, Paper, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Container, Grid, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import Page from "../components/Page";
@@ -21,6 +21,11 @@ export default function DashboardApp() {
                 </Box>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={12} lg={12}>
+                        {/* <Paper elevation={3}>
+                            <Typography variant="h6" fontWeight={"bold"}>
+                                CONNECTIONS
+                            </Typography>
+                        </Paper> */}
                         <Card>
                             <CardHeader title="CONNECTIONS" subheader={"Total Requests: "+connData.total_requests} />
                             <CardContent>
@@ -64,6 +69,9 @@ export default function DashboardApp() {
                                 </Grid>
                             </CardContent>
                         </Card>
+                        {/* <Card>
+                            <CardHeader title="NODE INFO" />
+                        </Card> */}
                     </Grid>
                 </Grid>
             </Container>
